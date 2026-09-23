@@ -6,9 +6,11 @@
 <meta name="description" content="学校元老猫小可爱（可猪太后）的纪念照片墙，欢迎送来你拍的她。">
 <link rel="icon" href="anim/2_base.png">
 <title>小可爱面包房</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Long+Cang&family=Noto+Sans+SC:wght@400;500;700&family=ZCOOL+KuaiLe&display=swap">
+<script>
+/* 字体异步加载，加载不到就用系统字体，不会卡住页面 */
+(function(){var q="css2?family=Long+Cang&family=Noto+Sans+SC:wght@400;500;700&family=ZCOOL+KuaiLe&display=swap";
+["https://fonts.loli.net/","https://fonts.googleapis.com/"].forEach(function(h){var l=document.createElement("link");l.rel="stylesheet";l.href=h+q;l.media="print";l.onload=function(){this.media="all"};document.head.appendChild(l)});})();
+</script>
 <style>
 html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
 :root{
@@ -156,6 +158,32 @@ dialog::backdrop{background:rgba(30,22,14,.72)}
 .kv b{font-weight:500;color:var(--crust)}
 .lb .story{white-space:pre-wrap;font-size:14px}
 .lb .nav{display:flex;gap:8px;margin-top:auto;flex-wrap:wrap}
+.lb .info{max-height:78vh;overflow:auto}
+.sec{border-top:1px dashed var(--line);padding-top:12px;display:grid;gap:8px}
+.sec>b{font-family:var(--sign);font-weight:400;font-size:17px}
+.rate-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.rate-row button{background:none;border:0;padding:2px;line-height:0;border-radius:6px}
+.rate-row svg{width:30px;height:22px}
+.rate-row .on .crust{fill:var(--crust)}.rate-row .off .crust{fill:none;stroke:var(--line);stroke-width:1.4}
+.rate-row button:hover svg .crust{fill:var(--butter)}
+.rate-row small{margin-left:8px;color:var(--ink-soft);font-size:12px}
+.cmt-list{display:grid;gap:8px;font-size:14px;max-height:220px;overflow:auto}
+.cmt{background:var(--ground);border-radius:8px;padding:8px 10px;position:relative}
+.cmt .who{font-size:12px;color:var(--ink-soft);display:flex;justify-content:space-between;gap:8px}
+.cmt p{margin:2px 0 0;overflow-wrap:anywhere}
+.cmt-form{display:grid;grid-template-columns:minmax(0,90px) minmax(0,1fr) auto;gap:6px}
+.xdel{background:none;border:0;color:var(--seal);font-size:12px;padding:0 2px}
+.own{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:13px}
+.edit-form{display:grid;gap:10px}
+.edit-form label{display:grid;gap:4px;font-size:13px;color:var(--ink-soft)}
+.sortbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:-8px 0 20px;font-size:13px;color:var(--ink-soft)}
+.sortbar button{border:1px solid var(--line);background:var(--paper);border-radius:8px;padding:4px 12px;font-size:13px;color:var(--ink-soft)}
+.sortbar button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.bread .sold{color:var(--crust);font-weight:500}
+.receipt .xdel{position:absolute;top:6px;right:8px}
+.receipt{position:relative}
+.admin-link{background:none;border:0;color:var(--ink-soft);font-size:12px;text-decoration:underline;text-underline-offset:3px;margin-top:10px}
+@media (max-width:760px){.cmt-form{grid-template-columns:1fr}}
 .close{position:absolute;top:10px;right:12px;width:34px;height:34px;border-radius:50%;border:0;background:rgba(0,0,0,.45);color:#fff;font-size:18px;line-height:1;z-index:2}
 .pop{animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
 @keyframes pop{from{transform:scale(.7) rotate(-6deg);opacity:0}to{transform:none;opacity:1}}
@@ -250,7 +278,7 @@ footer .hours{display:inline-block;margin-top:8px;border:1px solid var(--line);b
 }
 </style>
 <script src="config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
 </head>
 <body>
 
@@ -300,6 +328,12 @@ footer .hours{display:inline-block;margin-top:8px;border:1px solid var(--line);b
     </div>
   </div>
 
+  <div class="sortbar" id="sortbar" role="group" aria-label="排序">
+    <span>排序：</span>
+    <button data-sort="hot">最畅销（热度）</button>
+    <button data-sort="new">最新出炉</button>
+    <button data-sort="old">最早一批</button>
+  </div>
   <main class="wall" id="wall"><div class="empty-wall">面包还在烤箱里……</div></main>
 
   <section class="block">
@@ -317,6 +351,7 @@ footer .hours{display:inline-block;margin-top:8px;border:1px solid var(--line);b
     <div class="hand">太后千岁，喵星分店生意兴隆</div>
     <p>谢谢每一位拍下她、喂过她、被她趴过腿的同学。</p>
     <div class="hours">营业时间：想她的时候，随时开门</div>
+    <div><button class="admin-link" id="adminBtn">店主入口</button></div>
   </footer>
 </div>
 
@@ -358,7 +393,7 @@ footer .hours{display:inline-block;margin-top:8px;border:1px solid var(--line);b
       <label>当时的小故事（可不填）<textarea id="upStory" maxlength="500" placeholder="那天特别冷，她跳上我的腿就不走了……"></textarea></label>
       <div><div class="hint" style="margin-bottom:6px">口味（可多选）</div><div class="tagpick" id="tagPick"></div></div>
       <label>烘焙师署名（可不填，不填就是“匿名面包师”）<input type="text" id="upBy" maxlength="20"></label>
-      <p class="hint">拍到同学正脸的照片，请先问过对方哦。送来的照片所有人都能看到。</p>
+      <p class="hint">用这台设备送来的面包，之后在这台设备上可以补充信息或撤下。拍到同学正脸的照片，请先问过对方哦。送来的照片所有人都能看到。</p>
       <p class="msg" id="upMsg"></p>
       <button class="btn primary" type="submit" id="upSubmit">送进烤箱</button>
     </form>
@@ -378,6 +413,20 @@ const tagsOf=p=>(p.tags||[]).map(t=>LEGACY[t]||t);
 
 let sb=null,canEdit=location.hash==="#peek",canWrite=true;const CFG=window.KEZHU_CONFIG||{};
 let photos=[],notes=[],config={},filter="全部",current=-1,visible=[];
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(_){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}}};
+const rid=n=>{const a=new Uint8Array(n);crypto.getRandomValues(a);return [...a].map(x=>x.toString(16).padStart(2,"0")).join("")};
+let OWNER=LS.get("kzOwner",null);if(!OWNER){OWNER=rid(16);LS.set("kzOwner",OWNER)}
+let VOTER=LS.get("kzVoter",null);if(!VOTER){VOTER=rid(12);LS.set("kzVoter",VOTER)}
+let MINE=LS.get("kzMine",[]),MYRATE=LS.get("kzRate",{}),ADMIN=LS.get("kzAdmin","");
+let stats={},hasSocial=false,sortMode=LS.get("kzSort","new"),curId=null;
+if(ADMIN)canEdit=true;
+const sold=p=>{const s=stats[p.id];return s?(s.rating_count||0)+(s.comment_count||0):0};
+function sortList(list){const a=[...list];
+  if(sortMode==="hot")a.sort((x,y)=>(sold(y)-sold(x))||((stats[y.id]?.avg_score||0)-(stats[x.id]?.avg_score||0))||(y.createdAt-x.createdAt));
+  else if(sortMode==="old")a.sort((x,y)=>x.createdAt-y.createdAt);
+  else a.sort((x,y)=>y.createdAt-x.createdAt);
+  return a}
+const isMine=id=>ADMIN||MINE.includes(id);
 
 function toast(t){const el=document.createElement("div");el.className="toast";el.textContent=t;document.body.appendChild(el);setTimeout(()=>el.remove(),2800)}
 
@@ -467,19 +516,21 @@ function renderChips(){
   $("#chips").innerHTML='<span class="lead">货架</span>'+["全部",...TAGS].filter(t=>t==="全部"||counts[t]).map(t=>`<button class="chip" data-t="${t}" aria-pressed="${t===filter}">${t}<span class="c">${counts[t]}</span></button>`).join("");
 }
 function renderWall(){
-  visible=filter==="全部"?photos:photos.filter(p=>tagsOf(p).includes(filter));
+  visible=sortList(filter==="全部"?photos:photos.filter(p=>tagsOf(p).includes(filter)));
+  document.querySelectorAll("#sortbar [data-sort]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.sort===sortMode));
+  if(curId){const k=visible.findIndex(p=>p.id===curId);if(k>=0)current=k}
   const w=$("#wall");
   if(!visible.length){w.innerHTML=`<div class="empty-wall">${photos.length?"这个口味暂时卖完了":"货架还空着，来烤第一个面包吧"}</div>`;return}
   w.innerHTML=visible.map((p,i)=>{const t=tagsOf(p);return `<button class="bread" data-i="${i}" style="--r:${tilt(p.id)}deg">
     ${t[0]?`<span class="tag-card">${esc(t[0])}</span>`:""}
     <img loading="lazy" alt="${esc(p.caption||"太后")}" src="${esc(imgUrl(p))}" ${p.w&&p.h?`width="${p.w}" height="${p.h}"`:""}>
     ${p.caption?`<div class="cap">${esc(p.caption)}</div>`:""}
-    <div class="meta">${p.place?`<span>${esc(p.place)}</span>`:""}<span>烘焙师：${esc(p.by||"匿名面包师")}</span></div>
+    <div class="meta">${p.place?`<span>${esc(p.place)}</span>`:""}<span>烘焙师：${esc(p.by||"匿名面包师")}</span>${hasSocial&&stats[p.id]?.rating_count?`<span class="sold">${stats[p.id].avg_score} 分</span>`:""}${hasSocial&&sold(p)?`<span>已售 ${sold(p)}</span>`:""}</div>
   </button>`}).join("");
 }
 function fmtDate(ms){try{const d=new Date(ms);return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}`}catch(_){return ""}}
 function renderNotes(){
-  $("#notes").innerHTML=notes.length?notes.map((n,i)=>`<div class="receipt" style="--r:${tilt(n.id)*.5}deg">
+  $("#notes").innerHTML=notes.length?notes.map((n,i)=>`<div class="receipt" style="--r:${tilt(n.id)*.5}deg">${ADMIN?`<button class="xdel" data-delnote="${esc(n.id)}" aria-label="删除这张小票">删除</button>`:""}
     <div class="hd">小可爱面包房<br>No.${String(notes.length-i).padStart(4,"0")}</div>
     <p>${esc(n.text)}</p>
     <div class="ft"><span>顾客：${esc(n.name||"路过的同学")}</span><span>${fmtDate(n.createdAt)}</span></div>
@@ -489,7 +540,7 @@ function renderAll(){renderHero();renderTally();renderChips();renderWall();rende
 
 /* ——— 灯箱 ——— */
 function openLB(i,anim){
-  current=i;const p=visible[i];if(!p)return;const t=tagsOf(p);
+  current=i;const p=visible[i];if(!p)return;curId=p.id;const t=tagsOf(p);
   const kv=[["地点",p.place],["时间",p.when],["烘焙师",p.by||"匿名面包师"]].filter(x=>x[1]);
   $("#lbBody").innerHTML=`<div class="pic"><img class="${anim?"pop":""}" alt="${esc(p.caption||"太后")}" src="${esc(imgUrl(p))}"></div>
    <div class="info">
@@ -498,6 +549,15 @@ function openLB(i,anim){
      <div class="kv">${kv.map(([k,v])=>`<b>${k}</b><span>${esc(v)}</span>`).join("")}</div>
      ${t.length?`<div class="chips">${t.map(x=>`<span class="chip" style="cursor:default">${esc(x)}</span>`).join("")}</div>`:""}
      ${p.story?`<div class="story">${esc(p.story)}</div>`:""}
+     ${hasSocial&&dbOk?`<div class="sec"><b>给这个面包打分</b><div class="rate-row" id="rateRow"></div></div>
+     <div class="sec"><b>试吃评价 <small id="cmtCount" style="font-family:var(--sans);font-size:12px;color:var(--ink-soft)"></small></b>
+       <div class="cmt-list" id="cmtList"><span class="hint">评价加载中……</span></div>
+       <form class="cmt-form" id="cmtForm">
+         <input type="text" id="cmtName" maxlength="20" placeholder="署名" aria-label="署名">
+         <input type="text" id="cmtText" maxlength="200" placeholder="写一句试吃感受" aria-label="评价内容" required>
+         <button class="btn primary" type="submit">发表</button>
+       </form></div>`:""}
+     ${dbOk&&isMine(p.id)?`<div class="sec own" id="ownBox"><button class="btn" data-own="edit">补充信息</button><button class="btn danger" data-own="ask">撤下这个面包</button>${ADMIN&&!MINE.includes(p.id)?`<span class="hint">店主权限</span>`:""}</div>`:""}
      <div class="nav">
        <button class="btn" data-go="-1" ${visible.length<2?"disabled":""}>上一个</button>
        <button class="btn" data-go="1" ${visible.length<2?"disabled":""}>下一个</button>
@@ -505,6 +565,45 @@ function openLB(i,anim){
      </div>
    </div>`;
   const d=$("#lightbox");if(!d.open)d.showModal();
+  if(hasSocial&&dbOk){renderRate(p);loadComments(p.id);$("#cmtName").value=LS.get("kzCmtName","")}
+}
+function renderRate(p){
+  const el=$("#rateRow");if(!el)return;const mine=MYRATE[p.id]||0;const s=stats[p.id];
+  el.innerHTML=[1,2,3,4,5].map(n=>`<button data-rate="${n}" aria-label="${n} 分" title="${n} 分">${LOAF(n<=mine?"on":"off")}</button>`).join("")+
+    `<small>${s&&s.rating_count?`平均 ${s.avg_score} 分 · ${s.rating_count} 人打过分`:"还没人打分，来当第一个试吃员"}${mine?` · 你打了 ${mine} 分`:""}</small>`;
+}
+async function loadComments(id){
+  const el=$("#cmtList");if(!el)return;
+  try{const d=await api("/rest/v1/comments?select=*&photo_id=eq."+id+"&order=created_at.asc&limit=200");
+    if(curId!==id)return;
+    $("#cmtCount").textContent=d.length?`（${d.length}）`:"";
+    el.innerHTML=d.length?d.map(c=>`<div class="cmt"><div class="who"><span>${esc(c.name||"路过的同学")}</span><span>${fmtDate(Date.parse(c.created_at))}${ADMIN?` <button class="xdel" data-delcmt="${esc(c.id)}">删除</button>`:""}</span></div><p>${esc(c.text)}</p></div>`).join(""):'<span class="hint">还没有评价。</span>';
+    el.scrollTop=el.scrollHeight;
+  }catch(err){el.innerHTML='<span class="hint">评价暂时加载不出来。</span>'}
+}
+async function rpc(fn,body){return api("/rest/v1/rpc/"+fn,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body||{})})}
+async function loadStats(){
+  try{const d=await rpc("photo_stats");stats={};d.forEach(r=>stats[r.photo_id]=r);hasSocial=true}catch(_){hasSocial=false}
+}
+function openEdit(p){
+  const t=new Set(tagsOf(p));
+  $("#ownBox").outerHTML=`<form class="sec edit-form" id="editForm">
+    <b>补充信息</b>
+    <label>给这个面包起个名<input type="text" name="caption" maxlength="40" value="${esc(p.caption||"")}"></label>
+    <label>在哪儿拍的<input type="text" name="place" maxlength="30" value="${esc(p.place||"")}"></label>
+    <label>大概什么时候<input type="text" name="when" maxlength="30" value="${esc(p.when||"")}"></label>
+    <label>小故事<textarea name="story" maxlength="500">${esc(p.story||"")}</textarea></label>
+    <label>烘焙师署名<input type="text" name="by" maxlength="20" value="${esc(p.by||"")}"></label>
+    <div class="tagpick" id="editTags">${TAGS.map(x=>`<button type="button" class="chip" data-t="${x}" aria-pressed="${t.has(x)}">${x}</button>`).join("")}</div>
+    <div class="own"><button class="btn primary" type="submit">保存</button><button class="btn" type="button" data-own="cancel">取消</button></div>
+    <p class="msg" id="editMsg"></p></form>`;
+  $("#editTags").addEventListener("click",e=>{const c=e.target.closest(".chip");if(c)c.setAttribute("aria-pressed",c.getAttribute("aria-pressed")!=="true")});
+  $("#editForm").addEventListener("submit",async ev=>{ev.preventDefault();const f=ev.target;const m=$("#editMsg");
+    const patch={caption:f.caption.value.trim(),place:f.place.value.trim(),when:f.when.value.trim(),story:f.story.value.trim(),by:f.by.value.trim(),
+      tags:[...f.querySelectorAll('#editTags [aria-pressed="true"]')].map(c=>c.dataset.t)};
+    m.className="msg";m.textContent="保存中……";
+    try{await rpc("edit_photo",{p_photo:p.id,p_key:ADMIN||OWNER,p:patch});toast("信息已更新");await loadPhotos();openLB(current)}
+    catch(err){m.className="msg err";m.textContent="没保存上："+err.message}});
 }
 function randomPick(){
   if(!visible.length){toast("货架上还没有面包");return}
@@ -518,7 +617,40 @@ $("#lightbox").addEventListener("click",async e=>{
   if(e.target===$("#lightbox"))return $("#lightbox").close();
   const g=e.target.closest("[data-go]");
   if(g){const v=g.dataset.go;if(v==="r")return randomPick();return openLB((current+ +v+visible.length)%visible.length)}
+  const p=visible[current];if(!p)return;
+  const r=e.target.closest("[data-rate]");
+  if(r){const n=+r.dataset.rate;const old=MYRATE[p.id];MYRATE[p.id]=n;renderRate(p);
+    try{await rpc("rate_photo",{p_photo:p.id,p_voter:VOTER,p_score:n});LS.set("kzRate",MYRATE);toast(`你给这个面包打了 ${n} 分`);await loadStats();renderWall();renderRate(p)}
+    catch(err){if(old)MYRATE[p.id]=old;else delete MYRATE[p.id];renderRate(p);toast("打分没成功："+err.message)}
+    return}
+  const dc=e.target.closest("[data-delcmt]");
+  if(dc){try{await rpc("delete_comment",{p_comment:dc.dataset.delcmt,p_key:ADMIN});loadComments(p.id);await loadStats();renderWall()}catch(err){toast("没删掉："+err.message)}return}
+  const o=e.target.closest("[data-own]");if(!o)return;
+  const act=o.dataset.own;
+  if(act==="edit")return openEdit(p);
+  if(act==="cancel")return openLB(current);
+  if(act==="ask"){$("#ownBox").innerHTML='<span>确定把这个面包撤下货架吗？评分和评价会一起消失，无法恢复。</span><button class="btn danger" data-own="del">确定撤下</button><button class="btn" data-own="cancel">留着</button>';return}
+  if(act==="del"){try{await rpc("delete_photo",{p_photo:p.id,p_key:ADMIN||OWNER});MINE=MINE.filter(x=>x!==p.id);LS.set("kzMine",MINE);curId=null;$("#lightbox").close();toast("已撤下货架");loadPhotos()}catch(err){toast("没撤下来："+err.message)}}
 });
+$("#lightbox").addEventListener("submit",async e=>{
+  if(e.target.id!=="cmtForm")return;e.preventDefault();const p=visible[current];if(!p)return;
+  const text=$("#cmtText").value.trim();if(!text)return;const btn=e.target.querySelector("button");btn.disabled=true;
+  try{await api("/rest/v1/comments",{method:"POST",headers:{"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({photo_id:p.id,name:$("#cmtName").value.trim(),text})});
+    LS.set("kzCmtName",$("#cmtName").value.trim());$("#cmtText").value="";await loadComments(p.id);await loadStats();renderWall()}
+  catch(err){toast("评价没发出去："+err.message)}
+  btn.disabled=false;
+});
+$("#lightbox").addEventListener("close",()=>{curId=null});
+$("#sortbar").addEventListener("click",e=>{const b=e.target.closest("[data-sort]");if(!b)return;sortMode=b.dataset.sort;LS.set("kzSort",sortMode);renderWall()});
+$("#notes").addEventListener("click",async e=>{const b=e.target.closest("[data-delnote]");if(!b)return;
+  try{await rpc("delete_note",{p_note:b.dataset.delnote,p_key:ADMIN});toast("小票已删除");loadNotes()}catch(err){toast("没删掉："+err.message)}});
+$("#adminBtn").addEventListener("click",async()=>{
+  if(ADMIN){ADMIN="";LS.set("kzAdmin","");canEdit=location.hash==="#peek";toast("已退出店主模式");renderAll();return}
+  const k=prompt("请输入店主口令");if(!k)return;
+  try{const ok=await rpc("check_admin",{p_key:k});if(ok){ADMIN=k;LS.set("kzAdmin",k);canEdit=true;toast("已进入店主模式：可以编辑、撤下任何面包，删除评价和小票");renderAll();$("#adminBtn").textContent="退出店主模式"}else toast("口令不对")}
+  catch(err){toast("暂时验证不了："+err.message)}
+});
+if(ADMIN)$("#adminBtn").textContent="退出店主模式";
 document.addEventListener("keydown",e=>{if(!$("#lightbox").open||!visible.length)return;if(e.key==="ArrowRight")openLB((current+1)%visible.length);if(e.key==="ArrowLeft")openLB((current-1+visible.length)%visible.length)});
 $("#chips").addEventListener("click",e=>{const c=e.target.closest(".chip");if(!c)return;filter=c.dataset.t;renderChips();renderWall()});
 
@@ -560,11 +692,10 @@ $("#upForm").addEventListener("submit",async e=>{
     try{
       const {blob,w,h}=await shrink(picked[i]);
       const path=Date.now()+"-"+Math.random().toString(36).slice(2,8)+".jpg";
-      const up=await sb.storage.from("photos").upload(path,blob,{contentType:"image/jpeg"});
-      if(up.error)throw up.error;
-      const src=sb.storage.from("photos").getPublicUrl(path).data.publicUrl;
-      const ins=await sb.from("photos").insert({...meta,src,w,h});
-      if(ins.error)throw ins.error;
+      await api("/storage/v1/object/photos/"+path,{method:"POST",headers:{"Content-Type":"image/jpeg","x-upsert":"false"},body:blob},60000);
+      const src=CFG.supabaseUrl+"/storage/v1/object/public/photos/"+path;
+      if(hasSocial){const id=await rpc("add_photo",{p:{...meta,src,w,h},p_key:OWNER});MINE.push(id);LS.set("kzMine",MINE)}
+      else await api("/rest/v1/photos",{method:"POST",headers:{"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({...meta,src,w,h})});
       ok++;
     }catch(err){fails.push(picked[i].name+"："+(err.message||err.code))}
   }
@@ -579,37 +710,55 @@ $("#noteForm").addEventListener("submit",async e=>{
   e.preventDefault();const t=$("#noteText").value.trim();if(!t)return;const m=$("#noteMsg");
   if(!sb){m.className="msg err";m.textContent="留言功能还没开通（网站还没连上数据库）。";return}
   $("#noteBtn").disabled=true;
-  try{const r=await sb.from("notes").insert({name:$("#noteName").value.trim(),text:t});if(r.error)throw r.error;$("#noteText").value="";m.className="msg ok";m.textContent="小票已放上柜台。";loadNotes()}
+  try{await api("/rest/v1/notes",{method:"POST",headers:{"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({name:$("#noteName").value.trim(),text:t})});$("#noteText").value="";m.className="msg ok";m.textContent="小票已放上柜台。";loadNotes()}
   catch(err){m.className="msg err";m.textContent="没打出来："+(err.message||err.code)}
   $("#noteBtn").disabled=false;
 });
 
 /* ——— 开店 ——— */
+/* 直接用浏览器自带的 fetch 连数据库，不依赖任何外部程序库 */
+async function api(path,opt={},ms=15000){
+  const ctl=new AbortController();const t=setTimeout(()=>ctl.abort(),ms);
+  try{
+    const r=await fetch(CFG.supabaseUrl+path,{...opt,signal:ctl.signal,
+      headers:{apikey:CFG.supabaseAnonKey,Authorization:"Bearer "+CFG.supabaseAnonKey,...(opt.headers||{})}});
+    const txt=await r.text();
+    if(!r.ok){let m=txt;try{const j=JSON.parse(txt);m=j.message||j.error||txt}catch(_){}throw new Error(m||("HTTP "+r.status))}
+    return txt?JSON.parse(txt):null;
+  }catch(err){if(err.name==="AbortError")throw new Error("网络超时，请稍后再试");throw err}
+  finally{clearTimeout(t)}
+}
 const norm=r=>({...r,createdAt:r.createdAt||(r.created_at?Date.parse(r.created_at):0)});
+let staticPhotos=[],dbOk=false;
+function banner(msg){let el=$("#netBanner");if(!msg){el&&el.remove();return}
+  if(!el){el=document.createElement("div");el.id="netBanner";el.style.cssText="position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--seal);color:#fff;text-align:center;padding:8px 16px;font-size:14px";document.body.prepend(el)}
+  el.textContent=msg}
 async function loadPhotos(){
-  if(sb){const r=await sb.from("photos").select("*").order("created_at",{ascending:false}).limit(1000);
-    if(!r.error){photos=r.data.map(norm);renderAll();maybeAutoPlay(photos.length);return}
-    toast("货架加载出错，先展示店里的存货");}
-  try{const r=await fetch("photos.json");photos=(await r.json()).map(norm)}catch(_){photos=[]}
-  renderAll();maybeAutoPlay(photos.length);
+  try{const [d]=await Promise.all([api("/rest/v1/photos?select=*&order=created_at.desc&limit=1000"),loadStats()]);
+    photos=d.map(norm);dbOk=true;banner("");renderAll();maybeAutoPlay(photos.length);return true}
+  catch(_){return false}
 }
 async function loadNotes(){
-  if(!sb){notes=[];renderTally();renderNotes();return}
-  const r=await sb.from("notes").select("*").order("created_at",{ascending:false}).limit(300);
-  notes=r.error?[]:r.data.map(norm);renderTally();renderNotes();
+  try{notes=(await api("/rest/v1/notes?select=*&order=created_at.desc&limit=300")).map(norm);renderTally();renderNotes()}catch(_){}
 }
 (async()=>{
-  if(CFG.supabaseUrl&&CFG.supabaseAnonKey&&window.supabase&&!/YOUR-/.test(CFG.supabaseUrl)){
-    sb=window.supabase.createClient(CFG.supabaseUrl,CFG.supabaseAnonKey);
-  }else{
-    $("#upGate").textContent="上传功能还没开通：网站管理员需要先按 README 连接数据库。";$("#upSubmit").disabled=true;
-    $("#noteForm").hidden=true;$("#noteMsg").textContent="留言功能还没开通。";
+  try{staticPhotos=(await (await fetch("photos.json")).json()).map(norm)}catch(_){}
+  if(!(CFG.supabaseUrl&&CFG.supabaseAnonKey)||/YOUR-/.test(CFG.supabaseUrl)){
+    photos=staticPhotos;renderAll();renderNotes();
+    $("#upSubmit").disabled=true;$("#upGate").textContent="上传功能还没开通。";$("#noteForm").hidden=true;return}
+  sb=true;
+  /* 数据库最多等 4 秒；没回应就先展示存货，同时在后台继续重试 */
+  const first=loadPhotos();loadNotes();
+  const quick=await Promise.race([first,new Promise(r=>setTimeout(()=>r("slow"),4000))]);
+  if(quick!==true){
+    if(!photos.length){photos=staticPhotos;renderAll();renderNotes()}
+    banner("正在连接相册数据库……暂时先展示店里的存货");
+    const ok=await first;
+    if(!ok){banner("连不上相册数据库，大家送来的照片暂时看不到；换个网络或稍后刷新再试。");
+      let tries=0;const retry=setInterval(async()=>{if(await loadPhotos()){clearInterval(retry);loadNotes()}else if(++tries>5)clearInterval(retry)},15000);}
   }
-  await Promise.all([loadPhotos(),loadNotes()]);
-  if(sb){
-    sb.channel("live").on("postgres_changes",{event:"*",schema:"public",table:"photos"},()=>loadPhotos())
-      .on("postgres_changes",{event:"*",schema:"public",table:"notes"},()=>loadNotes()).subscribe();
-  }
+  /* 每 30 秒刷新一次，别人新送来的照片会自动出现 */
+  setInterval(()=>{if(dbOk&&!document.hidden){loadPhotos();loadNotes()}},30000);
 })();
 </script>
 </body>
