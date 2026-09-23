@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="学校元老猫小可爱（可猪太后）的纪念照片墙，欢迎送来你拍的她。">
+<link rel="icon" href="anim/2_base.png">
+<title>小可爱面包房</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Long+Cang&family=Noto+Sans+SC:wght@400;500;700&family=ZCOOL+KuaiLe&display=swap">
+<style>
+html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+:root{
+  --ground:#F1E6D3;      /* 牛皮纸 */
+  --ground-2:#E6D7BE;
+  --paper:#FFFBF3;       /* 烘焙纸 */
+  --ink:#3A2A1E;         /* 深烤色 */
+  --ink-soft:#735F4C;
+  --crust:#A2602E;       /* 面包皮，也是狸花色 */
+  --butter:#F0C265;      /* 黄油 */
+  --board:#2E3A2B;       /* 黑板，偏太后眼睛的绿 */
+  --chalk:#EFEDDF;
+  --chalk-soft:#B9C2A6;
+  --eye:#7C9838;
+  --seal:#B0382C;
+  --line:#D9C9AE;
+  --shadow:0 1px 2px rgba(58,42,30,.10),0 10px 24px -12px rgba(58,42,30,.35);
+  --sign:"ZCOOL KuaiLe","Yuanti SC","YouYuan",sans-serif;
+  --hand:"Long Cang","Kaiti SC","STKaiti","KaiTi",cursive;
+  --sans:"Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Noto Sans SC",monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#1E1914;--ground-2:#282119;--paper:#2B241C;--ink:#F2E8D8;--ink-soft:#C2B19C;
+    --crust:#DC9C5F;--butter:#E8B95A;--board:#1A2219;--chalk:#EDEBDD;--chalk-soft:#9EA88C;
+    --eye:#B4CE6A;--seal:#E3695B;--line:#433829;
+    --shadow:0 1px 2px rgba(0,0,0,.45),0 12px 28px -12px rgba(0,0,0,.75);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#1E1914;--ground-2:#282119;--paper:#2B241C;--ink:#F2E8D8;--ink-soft:#C2B19C;
+  --crust:#DC9C5F;--butter:#E8B95A;--board:#1A2219;--chalk:#EDEBDD;--chalk-soft:#9EA88C;
+  --eye:#B4CE6A;--seal:#E3695B;--line:#433829;
+  --shadow:0 1px 2px rgba(0,0,0,.45),0 12px 28px -12px rgba(0,0,0,.75);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.7;
+  background-image:radial-gradient(circle at 30% 40%,color-mix(in srgb,var(--crust) 10%,transparent) 1px,transparent 1.6px);background-size:14px 14px}
+h1,h2,h3{font-family:var(--sign);font-weight:400;text-wrap:balance;margin:0}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--crust);outline-offset:2px}
+
+/* ——— 遮阳棚 ——— */
+.awning{height:46px;background:repeating-linear-gradient(90deg,var(--crust) 0 44px,var(--paper) 44px 88px);position:relative}
+.awning::after{content:"";position:absolute;left:0;right:0;bottom:-14px;height:14px;
+  background:radial-gradient(circle at 22px 0,var(--crust) 21px,transparent 22px) 0 0/88px 14px repeat-x,
+             radial-gradient(circle at 66px 0,var(--paper) 21px,transparent 22px) 0 0/88px 14px repeat-x}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:20px;padding-block:40px 64px}
+
+/* ——— 招牌 + 橱窗 + 黑板 ——— */
+.sign{text-align:center;margin-bottom:28px}
+.sign .est{font-size:12px;letter-spacing:.3em;color:var(--crust);font-weight:500}
+.sign h1{font-size:clamp(38px,7.4vw,72px);line-height:1.1;margin-top:4px;color:var(--ink)}
+.sign p{margin:10px auto 0;max-width:36em;color:var(--ink-soft)}
+.shop{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start}
+.window{position:relative;background:var(--paper);padding:14px;border-radius:18px 18px 10px 10px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.window .glass{border-radius:10px;overflow:hidden;background:var(--ground-2)}
+.window img{width:100%;height:auto;display:block}
+.window .ph{aspect-ratio:4/3;display:grid;place-items:center;font-family:var(--hand);font-size:28px;color:var(--ink-soft)}
+.window .label{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:12px;padding-inline:4px}
+.window .label b{font-family:var(--hand);font-weight:400;font-size:24px}
+.window .label span{font-size:12px;color:var(--ink-soft)}
+.stamp{position:absolute;top:-16px;right:-10px;width:78px;height:78px;border-radius:50%;border:3px double var(--seal);color:var(--seal);
+  display:grid;place-items:center;text-align:center;font-family:var(--sign);font-size:15px;line-height:1.15;transform:rotate(12deg);
+  background:color-mix(in srgb,var(--paper) 82%,transparent)}
+.board{background:var(--board);color:var(--chalk);border-radius:12px;padding:24px 26px 22px;box-shadow:var(--shadow);
+  border:10px solid #7A5433;border-image:none}
+.board h2{font-size:28px;color:var(--butter);text-align:center}
+.board .sub{text-align:center;font-family:var(--hand);font-size:20px;color:var(--chalk-soft);margin:2px 0 14px}
+.menu{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.menu li{display:flex;align-items:baseline;gap:8px}
+.menu .k{font-family:var(--sign);font-size:17px;white-space:nowrap}
+.menu .dots{flex:1;border-bottom:2px dotted color-mix(in srgb,var(--chalk) 35%,transparent);transform:translateY(-4px);min-width:16px}
+.menu .v{font-family:var(--hand);font-size:21px;line-height:1.25;text-align:right;max-width:62%}
+.board .note{margin:16px 0 0;font-size:13px;color:var(--chalk-soft);text-align:center}
+
+/* ——— 出炉计数 ——— */
+.tally{display:flex;flex-wrap:wrap;align-items:center;gap:14px 30px;padding:18px 22px;background:var(--paper);border-radius:14px;box-shadow:var(--shadow);margin:40px 0 28px;border:1px solid var(--line)}
+.tally .num{font-family:var(--sign);font-size:38px;line-height:1;font-variant-numeric:tabular-nums}
+.tally .lbl{font-size:13px;color:var(--ink-soft)}
+.loaves{display:flex;flex-wrap:wrap;gap:4px;flex:1 1 260px;min-width:0}
+.loaves svg{width:22px;height:16px}
+.loaves .on .crust{fill:var(--crust)}.loaves .on .top{fill:var(--butter)}
+.loaves .off .crust{fill:none;stroke:var(--line);stroke-width:1.4}.loaves .off .top{fill:none}
+.goal{font-size:13px;color:var(--ink-soft);flex-basis:100%}
+.goal b{color:var(--crust);font-weight:500}
+
+/* ——— 货架工具栏 ——— */
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:22px}
+.bar .lead{font-family:var(--sign);font-size:24px;margin-right:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chip{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:4px 12px;font-size:13px;color:var(--ink-soft)}
+.chip[aria-pressed="true"]{background:var(--crust);color:var(--paper);border-color:var(--crust)}
+.chip .c{opacity:.65;margin-left:4px;font-variant-numeric:tabular-nums}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:0;border-radius:10px;padding:9px 16px;font-weight:500;font-size:14px;background:var(--paper);color:var(--ink);box-shadow:0 0 0 1px var(--line)}
+.btn.primary{background:var(--crust);color:var(--paper);box-shadow:none}
+.btn.butter{background:var(--butter);color:#3A2A1E;box-shadow:none}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* ——— 面包墙（照片） ——— */
+.wall{columns:4 220px;column-gap:22px}
+.bread{break-inside:avoid;margin:0 0 30px;background:var(--paper);padding:10px 10px 14px;border-radius:6px;box-shadow:var(--shadow);border:1px solid var(--line);
+  transform:rotate(var(--r,0deg));transition:transform .25s ease;cursor:zoom-in;display:block;width:100%;text-align:left;position:relative}
+.bread:hover{transform:rotate(0deg) translateY(-3px)}
+.bread img{width:100%;height:auto;object-fit:contain;display:block;border-radius:3px;background:var(--ground-2)}
+.bread .tag-card{position:absolute;top:18px;left:-8px;background:var(--butter);color:#3A2A1E;font-size:12px;padding:2px 10px 2px 12px;border-radius:0 4px 4px 0;
+  box-shadow:0 1px 2px rgba(0,0,0,.18);font-weight:500}
+.bread .tag-card::before{content:"";position:absolute;left:4px;top:50%;width:4px;height:4px;border-radius:50%;background:#3A2A1E;transform:translateY(-50%);opacity:.55}
+.bread .cap{font-family:var(--hand);font-size:21px;line-height:1.3;margin-top:10px}
+.bread .meta{font-size:12px;color:var(--ink-soft);margin-top:4px;display:flex;gap:8px;flex-wrap:wrap}
+.empty-wall{padding:48px 20px;text-align:center;color:var(--ink-soft);font-family:var(--hand);font-size:24px}
+
+/* ——— 小票留言 ——— */
+section.block{margin-top:60px}
+.sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.sec-head h2{font-size:30px}
+.sec-head p{margin:0;color:var(--ink-soft);font-size:14px}
+.receipts{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:22px 16px;align-items:start}
+.receipt{background:var(--paper);padding:14px 16px 20px;font-family:var(--mono);font-size:12px;color:var(--ink-soft);transform:rotate(var(--r,0deg));
+  filter:drop-shadow(0 4px 6px rgba(58,42,30,.18));
+  -webkit-mask:linear-gradient(#000 0 0) top/100% calc(100% - 8px) no-repeat,radial-gradient(circle 5px at 50% 100%,transparent 98%,#000) bottom/12px 9px repeat-x;
+  mask:linear-gradient(#000 0 0) top/100% calc(100% - 8px) no-repeat,radial-gradient(circle 5px at 50% 100%,transparent 98%,#000) bottom/12px 9px repeat-x}
+.receipt .hd{text-align:center;letter-spacing:.1em;border-bottom:1px dashed var(--line);padding-bottom:6px;margin-bottom:8px}
+.receipt p{margin:0;font-family:var(--hand);font-size:21px;line-height:1.35;color:var(--ink);overflow-wrap:anywhere}
+.receipt .ft{display:flex;justify-content:space-between;gap:8px;border-top:1px dashed var(--line);margin-top:10px;padding-top:6px}
+.note-form{display:grid;grid-template-columns:minmax(0,140px) minmax(0,1fr) auto;gap:8px;margin-bottom:10px}
+input[type=text],textarea{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%;min-width:0}
+textarea{resize:vertical;min-height:70px}
+
+/* ——— 弹层 ——— */
+dialog{border:0;padding:0;background:transparent;color:var(--ink);max-width:min(94vw,980px);width:100%}
+dialog::backdrop{background:rgba(30,22,14,.72)}
+.sheet{background:var(--paper);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);position:relative}
+.lb{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
+.lb .pic{background:#16110C;display:grid;place-items:center;min-height:280px}
+.lb .pic img{max-height:78vh;max-width:100%;width:auto;height:auto;object-fit:contain;display:block}
+.lb .info{padding:22px;display:flex;flex-direction:column;gap:10px}
+.lb .info .cap{font-family:var(--hand);font-size:28px;line-height:1.3}
+.kv{font-size:13px;color:var(--ink-soft);display:grid;grid-template-columns:auto 1fr;gap:4px 12px}
+.kv b{font-weight:500;color:var(--crust)}
+.lb .story{white-space:pre-wrap;font-size:14px}
+.lb .nav{display:flex;gap:8px;margin-top:auto;flex-wrap:wrap}
+.close{position:absolute;top:10px;right:12px;width:34px;height:34px;border-radius:50%;border:0;background:rgba(0,0,0,.45);color:#fff;font-size:18px;line-height:1;z-index:2}
+.pop{animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.7) rotate(-6deg);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion: reduce){.pop{animation:none}.bread{transition:none}}
+.danger{color:var(--seal)}
+.confirm{font-size:13px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+.form{padding:24px;display:grid;gap:14px}
+.form h3{font-size:26px}
+.form .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form label{display:grid;gap:4px;font-size:13px;color:var(--ink-soft)}
+.drop{border:2px dashed var(--line);border-radius:12px;padding:22px;text-align:center;color:var(--ink-soft);background:var(--ground);cursor:pointer}
+.drop.over{border-color:var(--crust);background:var(--ground-2)}
+.thumbs{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;justify-content:center}
+.thumbs img{width:56px;height:56px;object-fit:cover;border-radius:6px}
+.tagpick{display:flex;flex-wrap:wrap;gap:6px}
+.msg{font-size:13px;min-height:1.4em;margin:0}
+.msg.err{color:var(--seal)}
+.msg.ok{color:var(--eye)}
+.hint{font-size:12px;color:var(--ink-soft);margin:0}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:999px;font-size:14px;z-index:10;box-shadow:var(--shadow);max-width:calc(100vw - 32px)}
+/* ——— 解锁卡 ——— */
+.unlock{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;border-top:1px dashed var(--line);padding-top:14px}
+.unlock .ic{width:40px;height:40px;flex:none;border-radius:50%;display:grid;place-items:center;background:var(--ground-2)}
+.unlock .ic svg{width:22px;height:22px;fill:none;stroke:var(--ink-soft);stroke-width:2;stroke-linecap:round}
+.unlock.on .ic{background:var(--butter)}
+.unlock.on .ic svg{stroke:#3A2A1E}
+.unlock .txt{flex:1 1 220px;min-width:0}
+.unlock .txt b{font-family:var(--sign);font-weight:400;font-size:18px;display:block;line-height:1.3}
+.unlock .txt small{font-size:12px;color:var(--ink-soft)}
+.prog{height:8px;border-radius:99px;background:var(--ground-2);overflow:hidden;margin-top:6px;max-width:320px}
+.prog i{display:block;height:100%;background:var(--crust);border-radius:99px;transition:width .6s ease}
+.peek{background:none;border:0;padding:0;font-size:12px;color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px}
+
+/* ——— 太后小动画（约稿插画） ——— */
+#unlockDlg{max-width:min(94vw,520px)}
+.stage{position:relative;overflow:hidden;background:var(--paper);padding:18px 18px 22px;text-align:center}
+.art{position:relative;width:100%;max-width:440px;aspect-ratio:1;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}
+.art img{position:absolute;display:block;max-width:none;pointer-events:none;user-select:none}
+.art .base{inset:0;width:100%;height:100%}
+.art .zoom{position:absolute;inset:0;transform:scale(1.32);transform-origin:50% 48%}
+.stage h3{font-size:26px;margin-top:14px}
+.stage p{margin:6px auto 14px;color:var(--ink-soft);font-size:14px;max-width:30em}
+.stage .row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.art .cat{transform-origin:50% 78%}
+.play .art{animation:cardIn .7s cubic-bezier(.25,1.4,.5,1) both}
+.play .cat{animation:catIn .9s .15s ease-out both,var(--idle) var(--idleDur,4s) 1.1s ease-in-out infinite}
+.play .spr{animation:sprIn .5s var(--d) cubic-bezier(.3,1.6,.5,1) both,var(--loop) var(--ld) calc(var(--d) + .5s) ease-in-out infinite}
+.spr{transform-origin:50% 50%}
+.spr.sway{transform-origin:50% 100%}
+@keyframes cardIn{from{transform:scale(.86) rotate(-2deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes catIn{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes sprIn{from{opacity:0;transform:scale(.2) rotate(-30deg)}to{opacity:1;transform:none}}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.018,1.024)}}
+@keyframes tilt{0%,100%{transform:rotate(0)}30%{transform:rotate(-1.8deg)}70%{transform:rotate(1.4deg)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes twinkle{0%,100%{transform:scale(1) rotate(0);opacity:1}50%{transform:scale(1.18) rotate(12deg);opacity:.75}}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.2;transform:scale(.6)}}
+@keyframes float{0%,100%{transform:translate(0,0)}50%{transform:translate(3px,-9px)}}
+@keyframes sway{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes bounce{0%,100%{transform:translateY(0) scale(1)}40%{transform:translateY(-7px) scale(1.04,.97)}60%{transform:translateY(0) scale(.97,1.03)}}
+@keyframes gold{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-8px) rotate(4deg)}}
+.snow{position:absolute;top:-8px;width:6px;height:6px;border-radius:50%;background:#fff;box-shadow:0 0 0 1px rgba(120,140,170,.25);animation:snow linear infinite}
+@keyframes snow{to{transform:translate(var(--dx),460px)}}
+.glint{position:absolute;width:10px;height:10px;background:radial-gradient(circle,#FFE9A0 0 30%,transparent 65%);animation:glint 2.2s ease-in-out infinite}
+@keyframes glint{0%,100%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1.4)}}
+.shine{position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.85) 50%,transparent 65%);background-size:250% 100%;mix-blend-mode:screen;animation:shine 2.6s 1.2s ease-in-out infinite;-webkit-mask:var(--m) center/contain no-repeat;mask:var(--m) center/contain no-repeat}
+@keyframes shine{0%{background-position:120% 0}60%,100%{background-position:-60% 0}}
+@media (prefers-reduced-motion: reduce){.play *{animation:none!important}.snow,.glint,.shine{display:none}}
+.dex{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.dex button{width:46px;height:46px;border-radius:10px;border:1px solid var(--line);background:#fff;padding:0;overflow:hidden;position:relative}
+.dex button img{width:100%;height:100%;object-fit:cover;display:block}
+.dex button.locked img{filter:grayscale(1) brightness(1.15) blur(2px);opacity:.45}
+.dex button.locked::after{content:"?";position:absolute;inset:0;display:grid;place-items:center;font-family:var(--sign);font-size:20px;color:var(--ink-soft)}
+.dex button:disabled{cursor:default}
+footer{margin-top:64px;text-align:center;color:var(--ink-soft);font-size:13px}
+footer .hand{font-family:var(--hand);font-size:26px;color:var(--ink)}
+footer .hours{display:inline-block;margin-top:8px;border:1px solid var(--line);border-radius:8px;padding:6px 14px;background:var(--paper);font-family:var(--mono);font-size:12px}
+
+@media (max-width:760px){
+  .shop{grid-template-columns:1fr}
+  .board{padding:18px 16px;border-width:8px}
+  .menu .v{font-size:19px}
+  .lb{grid-template-columns:1fr}
+  .lb .pic img{max-height:56vh}
+  .note-form{grid-template-columns:1fr}
+  .form .row{grid-template-columns:1fr}
+  .wall{columns:2 150px;column-gap:14px}
+  .bread{margin-bottom:18px;padding:7px 7px 10px}
+  .bread .cap{font-size:18px}
+  .stamp{width:64px;height:64px;font-size:13px;right:-4px}
+}
+</style>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+
+<div class="awning" aria-hidden="true"></div>
+<div class="wrap">
+  <header class="sign">
+    <div class="est">校园元老 · 动保社缘起 · 坐镇六年</div>
+    <h1>小可爱面包房</h1>
+    <p>本店由太后亲自坐镇。她圆滚滚的，像一只土豆，也像一个刚出炉的大面包。太后已经去喵星开分店了，我们把大家手机里她的样子一炉一炉烤出来，摆上货架。</p>
+  </header>
+
+  <div class="shop">
+    <figure class="window" style="margin:0">
+      <div class="stamp" aria-hidden="true">太后<br>亲自<br>监制</div>
+      <div class="glass" id="heroGlass"><div class="ph">橱窗正在布置……</div></div>
+      <figcaption class="label"><b>镇店之宝 · 太后本尊</b><span>非卖品</span></figcaption>
+    </figure>
+    <div class="board">
+      <h2>今日招牌</h2>
+      <div class="sub">—— 太后档案 ——</div>
+      <ul class="menu">
+        <li><span class="k">本名</span><span class="dots"></span><span class="v">小可爱</span></li>
+        <li><span class="k">尊号</span><span class="dots"></span><span class="v">可猪 · 太后</span></li>
+        <li><span class="k">品种</span><span class="dots"></span><span class="v">狸花雀猫</span></li>
+        <li><span class="k">外观</span><span class="dots"></span><span class="v">绿眼睛，白胸脯，烤得刚刚好的面包色</span></li>
+        <li><span class="k">口感</span><span class="dots"></span><span class="v">外皮傲娇，雍容华贵；天冷时趴腿上，内里超软</span></li>
+        <li><span class="k">功绩</span><span class="dots"></span><span class="v">学校动保社因她而设立</span></li>
+        <li><span class="k">在店</span><span class="dots"></span><span class="v">六年</span></li>
+      </ul>
+      <p class="note">本店所有面包都不卖，只供想念。</p>
+    </div>
+  </div>
+
+  <div class="tally" aria-live="polite">
+    <div><div class="num" id="photoCount">0</div><div class="lbl">个面包已出炉</div></div>
+    <div><div class="num" id="noteCount">0</div><div class="lbl">张顾客小票</div></div>
+    <div class="loaves" id="loaves" aria-hidden="true"></div>
+    <div class="goal" id="goal"></div>
+    <div class="unlock" id="unlock"></div>
+  </div>
+
+  <div class="bar">
+    <div class="chips" id="chips" role="group" aria-label="按口味挑"><span class="lead">货架</span></div>
+    <div class="actions">
+      <button class="btn butter" id="randomBtn">盲盒面包 · 随机抽一个</button>
+      <button class="btn primary" id="uploadBtn">送来一炉新面包</button>
+    </div>
+  </div>
+
+  <main class="wall" id="wall"><div class="empty-wall">面包还在烤箱里……</div></main>
+
+  <section class="block">
+    <div class="sec-head"><h2>顾客留言小票</h2><p>想对太后说的话，打一张小票留在柜台上。</p></div>
+    <form class="note-form" id="noteForm">
+      <input type="text" id="noteName" maxlength="20" placeholder="顾客署名（可不填）" aria-label="署名">
+      <input type="text" id="noteText" maxlength="200" placeholder="太后，今天路过你常趴的地方，还是会想起你……" aria-label="想对她说的话" required>
+      <button class="btn primary" type="submit" id="noteBtn">打印小票</button>
+    </form>
+    <p class="msg" id="noteMsg"></p>
+    <div class="receipts" id="notes"></div>
+  </section>
+
+  <footer>
+    <div class="hand">太后千岁，喵星分店生意兴隆</div>
+    <p>谢谢每一位拍下她、喂过她、被她趴过腿的同学。</p>
+    <div class="hours">营业时间：想她的时候，随时开门</div>
+  </footer>
+</div>
+
+<dialog id="unlockDlg" aria-label="太后小动画">
+  <div class="sheet">
+    <button class="close" id="unlockClose" aria-label="关闭">×</button>
+    <div class="stage" id="stage">
+      <div class="art" id="art"></div>
+      <h3 id="unlockTitle"></h3>
+      <p id="unlockLine"></p>
+      <div class="row"><button class="btn" id="replayBtn">再看一次</button><button class="btn butter" id="otherBtn">随机换一个</button></div>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="lightbox" aria-label="面包详情">
+  <div class="sheet">
+    <button class="close" id="lbClose" aria-label="关闭">×</button>
+    <div class="lb" id="lbBody"></div>
+  </div>
+</dialog>
+
+<dialog id="upDialog" aria-label="送来一炉新面包">
+  <div class="sheet" style="max-width:640px;margin:0 auto">
+    <button class="close" id="upClose" aria-label="关闭">×</button>
+    <form class="form" id="upForm">
+      <h3>送来一炉新面包</h3>
+      <p class="hint" id="upGate">把你手机里太后的照片送进烤箱，出炉后就摆上货架。</p>
+      <label class="drop" id="drop" for="upFiles">
+        <span>点这里选照片，或者把照片拖进来（可以多选）</span>
+        <input type="file" id="upFiles" accept="image/*" multiple hidden>
+        <div class="thumbs" id="thumbs"></div>
+      </label>
+      <label>给这个面包起个名<input type="text" id="upCap" maxlength="40" placeholder="例：图书馆门口的揣手吐司"></label>
+      <div class="row">
+        <label>在哪儿拍的<input type="text" id="upPlace" maxlength="30" placeholder="图书馆门口 / 食堂后面"></label>
+        <label>大概什么时候<input type="text" id="upWhen" maxlength="30" placeholder="2024 年冬天"></label>
+      </div>
+      <label>当时的小故事（可不填）<textarea id="upStory" maxlength="500" placeholder="那天特别冷，她跳上我的腿就不走了……"></textarea></label>
+      <div><div class="hint" style="margin-bottom:6px">口味（可多选）</div><div class="tagpick" id="tagPick"></div></div>
+      <label>烘焙师署名（可不填，不填就是“匿名面包师”）<input type="text" id="upBy" maxlength="20"></label>
+      <p class="hint">拍到同学正脸的照片，请先问过对方哦。送来的照片所有人都能看到。</p>
+      <p class="msg" id="upMsg"></p>
+      <button class="btn primary" type="submit" id="upSubmit">送进烤箱</button>
+    </form>
+  </div>
+</dialog>
+
+<script>
+const TAGS=["揣成吐司","开门营业","巡店","醒面中","试吃","热乎乎","限定款"];
+const LEGACY={"面包态":"揣成吐司","营业":"开门营业","巡视":"巡店","休憩":"醒面中","御膳":"试吃","贴贴":"热乎乎","整活":"限定款"};
+const MILESTONES=[10,30,50,100,200,500];
+const LOAF=c=>`<svg class="${c}" viewBox="0 0 22 16"><path class="crust" d="M2 9c0-4 4-7 9-7s9 3 9 7v5H2z"/><path class="top" d="M6 6c1-1 2-1 3 0M11 5c1-1 2-1 3 0M15 6.5c.8-.8 1.6-.8 2.4 0" stroke="#fff" stroke-opacity=".0"/></svg>`;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const tilt=id=>{let h=0;for(const c of String(id))h=(h*31+c.charCodeAt(0))|0;return ((Math.abs(h)%7)-3)*0.7};
+const imgUrl=p=>p.src||"";
+const tagsOf=p=>(p.tags||[]).map(t=>LEGACY[t]||t);
+
+let sb=null,canEdit=location.hash==="#peek",canWrite=true;const CFG=window.KEZHU_CONFIG||{};
+let photos=[],notes=[],config={},filter="全部",current=-1,visible=[];
+
+function toast(t){const el=document.createElement("div");el.className="toast";el.textContent=t;document.body.appendChild(el);setTimeout(()=>el.remove(),2800)}
+
+/* ——— 渲染 ——— */
+function renderHero(){
+  const src=CFG.heroPhoto||(photos[photos.length-1]&&photos[photos.length-1].src);
+  $("#heroGlass").innerHTML=src?'<img alt="太后本尊" src="'+esc(src)+'">':'<div class="ph">橱窗正在布置……</div>';
+}
+function renderTally(){
+  const n=photos.length;
+  $("#photoCount").textContent=n;$("#noteCount").textContent=notes.length;
+  const next=MILESTONES.find(m=>m>n)||n+100;
+  const prev=[0,...MILESTONES].filter(m=>m<=n).pop();
+  const show=Math.min(next,30);
+  const filled=next<=30?n:Math.round((n-prev)/(next-prev)*show);
+  let h="";for(let i=0;i<show;i++)h+=LOAF(i<filled?"on":"off");
+  $("#loaves").innerHTML=h;
+  const reached=MILESTONES.filter(m=>m<=n).pop();
+  renderUnlock(n);
+  $("#goal").innerHTML=(reached?`第 <b>${reached}</b> 炉已经出炉，太后很满意。`:"每送来一张照片，货架上就多一个面包。")+` 再烤 <b>${next-n}</b> 个，就满 ${next} 个啦。`;
+}
+/* ——— 每满 10 张：随机出现一个太后小动画（约稿插画） ——— */
+const STEP=10;
+const LOCK_SVG='<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+const CROWN_SVG='<svg viewBox="0 0 24 24"><path d="M4 18 5 7l4.5 5L12 5l2.5 7L19 7l1 11z" stroke-linejoin="round"/></svg>';
+const ANIMS=[{"title": "圣诞太后驾到", "line": "太后披上红斗篷。今年的圣诞礼物，是大家送来的这些照片。", "idle": "breathe", "fx": "snow", "base": "anim/0_base.png", "sprites": [{"src": "anim/0_s2.png", "x": 311, "y": 153, "w": 34, "h": 36, "kind": "blink"}, {"src": "anim/0_s3.png", "x": 403, "y": 213, "w": 85, "h": 109, "kind": "sway"}, {"src": "anim/0_s4.png", "x": 96, "y": 248, "w": 87, "h": 91, "kind": "twinkle"}, {"src": "anim/0_s5.png", "x": 426, "y": 331, "w": 62, "h": 68, "kind": "twinkle"}, {"src": "anim/0_s6.png", "x": 101, "y": 337, "w": 76, "h": 76, "kind": "float"}, {"src": "anim/0_s8.png", "x": 402, "y": 407, "w": 44, "h": 51, "kind": "blink"}, {"src": "anim/0_s9.png", "x": 169, "y": 420, "w": 34, "h": 43, "kind": "blink"}]}, {"title": "围巾太后", "line": "天冷了，太后系好围巾。下一步，就要去趴同学的腿了。", "idle": "tilt", "fx": "snow", "base": "anim/1_base.png", "sprites": [{"src": "anim/1_s2.png", "x": 245, "y": 154, "w": 38, "h": 46, "kind": "blink"}, {"src": "anim/1_s3.png", "x": 133, "y": 190, "w": 42, "h": 49, "kind": "blink"}, {"src": "anim/1_s4.png", "x": 416, "y": 247, "w": 64, "h": 67, "kind": "twinkle"}, {"src": "anim/1_s5.png", "x": 88, "y": 266, "w": 78, "h": 101, "kind": "twinkle"}, {"src": "anim/1_s7.png", "x": 387, "y": 304, "w": 117, "h": 94, "kind": "bounce"}, {"src": "anim/1_s8.png", "x": 120, "y": 362, "w": 66, "h": 70, "kind": "float"}, {"src": "anim/1_s9.png", "x": 384, "y": 388, "w": 59, "h": 65, "kind": "blink"}]}, {"title": "太后万福", "line": "戴上红流苏项圈，给大家拜个早年。", "idle": "bob", "fx": "glint", "base": "anim/2_base.png", "sprites": [{"src": "anim/2_s1.png", "x": 249, "y": 160, "w": 31, "h": 34, "kind": "blink"}, {"src": "anim/2_s3.png", "x": 400, "y": 201, "w": 43, "h": 46, "kind": "blink"}, {"src": "anim/2_s4.png", "x": 136, "y": 221, "w": 40, "h": 47, "kind": "blink"}, {"src": "anim/2_s6.png", "x": 422, "y": 272, "w": 58, "h": 77, "kind": "twinkle"}, {"src": "anim/2_s7.png", "x": 116, "y": 284, "w": 60, "h": 75, "kind": "twinkle"}, {"src": "anim/2_s8.png", "x": 403, "y": 355, "w": 56, "h": 57, "kind": "float"}, {"src": "anim/2_s9.png", "x": 153, "y": 362, "w": 42, "h": 44, "kind": "blink"}]}, {"title": "招财太后", "line": "太后抱着金条来了：照片多多，本宫很富有。", "idle": "breathe", "fx": "gold", "base": "anim/3_base.png", "sprites": [{"src": "anim/3_s3.png", "x": 371, "y": 157, "w": 49, "h": 58, "kind": "twinkle"}, {"src": "anim/3_s5.png", "x": 152, "y": 180, "w": 48, "h": 46, "kind": "blink"}, {"src": "anim/3_s6.png", "x": 422, "y": 196, "w": 80, "h": 101, "kind": "gold"}, {"src": "anim/3_s8.png", "x": 104, "y": 257, "w": 71, "h": 70, "kind": "float"}, {"src": "anim/3_s9.png", "x": 455, "y": 293, "w": 47, "h": 43, "kind": "blink"}, {"src": "anim/3_s10.png", "x": 112, "y": 320, "w": 80, "h": 96, "kind": "twinkle"}]}];
+const LOOPS={twinkle:"twinkle 2.6s",blink:"blink 1.8s",float:"float 3.2s",sway:"sway 2.8s",bounce:"bounce 1.6s",gold:"gold 2.4s"};
+function lsGet(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(_){return d}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}}
+function renderUnlock(n){
+  const el=$("#unlock");const got=Math.floor(n/STEP);const into=n%STEP;const seen=lsGet("kzSeenAnims",[]);
+  const dex=ANIMS.map((a,i)=>{const s=seen.includes(i);return `<button class="${s?"":"locked"}" data-anim="${i}" ${s?"":"disabled"} title="${s?esc(a.title):"还没遇到"}" aria-label="${s?esc(a.title):"未解锁的动画"}"><img src="${a.base}" alt=""></button>`}).join("");
+  el.className="unlock"+(got?" on":"");
+  el.innerHTML=`<div class="ic">${got?CROWN_SVG:LOCK_SVG}</div>
+    <div class="txt"><b>每集满 ${STEP} 张照片，随机出现一个太后小动画</b>
+      <small>这一轮已集 ${into} / ${STEP} 张，还差 ${STEP-into} 张${got?`；已经解锁过 ${got} 次`:""}</small>
+      <div class="prog"><i style="width:${into/STEP*100}%"></i></div>
+      <div class="dex" aria-label="遇到过的太后">${dex}</div>
+    </div>
+    ${got?'<button class="btn butter" data-play>随机看一个</button>':(canEdit?'<button class="peek" data-play>店主偷看一下</button>':"")}`;
+}
+let snowTimer=null,curAnim=-1;
+function buildArt(i){
+  const a=ANIMS[i],art=$("#art");
+  art.innerHTML=`<div class="zoom"><img class="base cat" src="${a.base}" alt="${esc(a.title)}" style="--idle:${a.idle};--idleDur:${a.idle==="tilt"?"4.5s":"3.6s"}">`+
+    a.sprites.map((s,k)=>{const [nm,dur]=(LOOPS[s.kind]||LOOPS.blink).split(" ");
+      return `<img class="spr ${s.kind}" src="${s.src}" alt="" style="left:${s.x/6}%;top:${s.y/6}%;width:${s.w/6}%;height:${s.h/6}%;--d:${(.5+k*.14).toFixed(2)}s;--loop:${nm};--ld:${(parseFloat(dur)+k*.23).toFixed(2)}s">`}).join("")+"</div>";
+  const gold=a.sprites.find(s=>s.kind==="gold");
+  if(gold)art.querySelector(".zoom").insertAdjacentHTML("beforeend",`<div class="shine" style="left:${gold.x/6}%;top:${gold.y/6}%;width:${gold.w/6}%;height:${gold.h/6}%;right:auto;bottom:auto;--m:url(${gold.src})"></div>`);
+  clearInterval(snowTimer);
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  if(a.fx==="snow"){
+    const drop=()=>{const s=document.createElement("span");s.className="snow";const z=3+Math.random()*5;
+      Object.assign(s.style,{left:Math.random()*100+"%",width:z+"px",height:z+"px",animationDuration:(4+Math.random()*4)+"s",opacity:.6+Math.random()*.4});
+      s.style.setProperty("--dx",(Math.random()*40-20)+"px");art.appendChild(s);setTimeout(()=>s.remove(),8200)};
+    for(let k=0;k<8;k++)setTimeout(drop,k*120);snowTimer=setInterval(drop,380);
+  }else{
+    const n=a.fx==="gold"?7:10;
+    for(let k=0;k<n;k++){const g=document.createElement("span");g.className="glint";
+      Object.assign(g.style,{left:(15+Math.random()*70)+"%",top:(18+Math.random()*64)+"%",animationDelay:(1+Math.random()*2.2)+"s",animationDuration:(1.8+Math.random()*1.6)+"s"});art.appendChild(g)}
+  }
+}
+function playUnlock(i){
+  if(typeof i!=="number"||!(i in ANIMS)){do{i=Math.floor(Math.random()*ANIMS.length)}while(ANIMS.length>1&&i===curAnim)}
+  curAnim=i;const a=ANIMS[i];
+  $("#unlockTitle").textContent=a.title;$("#unlockLine").textContent=a.line;
+  const st=$("#stage");st.classList.remove("play");buildArt(i);void st.offsetWidth;st.classList.add("play");
+  const d=$("#unlockDlg");if(!d.open)d.showModal();
+  const seen=lsGet("kzSeenAnims",[]);if(!seen.includes(i)){seen.push(i);lsSet("kzSeenAnims",seen);renderUnlock(photos.length)}
+}
+$("#unlock").addEventListener("click",e=>{const b=e.target.closest("[data-anim]");if(b&&!b.disabled)return playUnlock(+b.dataset.anim);if(e.target.closest("[data-play]"))playUnlock()});
+$("#replayBtn").onclick=()=>playUnlock(curAnim);
+$("#otherBtn").onclick=()=>playUnlock();
+$("#unlockClose").onclick=()=>$("#unlockDlg").close();
+$("#unlockDlg").addEventListener("close",()=>{clearInterval(snowTimer);$("#stage").classList.remove("play")});
+$("#unlockDlg").addEventListener("click",e=>{if(e.target===$("#unlockDlg"))$("#unlockDlg").close()});
+let prevCount=null;
+function maybeAutoPlay(n){
+  const m=Math.floor(n/STEP),last=lsGet("kzLastMilestone",0);
+  if(m>0&&((prevCount!==null&&Math.floor(prevCount/STEP)<m)||(prevCount===null&&m>last)))setTimeout(()=>playUnlock(),600);
+  if(m>last)lsSet("kzLastMilestone",m);
+  prevCount=n;
+}
+
+function renderChips(){
+  const counts={全部:photos.length};TAGS.forEach(t=>counts[t]=photos.filter(p=>tagsOf(p).includes(t)).length);
+  $("#chips").innerHTML='<span class="lead">货架</span>'+["全部",...TAGS].filter(t=>t==="全部"||counts[t]).map(t=>`<button class="chip" data-t="${t}" aria-pressed="${t===filter}">${t}<span class="c">${counts[t]}</span></button>`).join("");
+}
+function renderWall(){
+  visible=filter==="全部"?photos:photos.filter(p=>tagsOf(p).includes(filter));
+  const w=$("#wall");
+  if(!visible.length){w.innerHTML=`<div class="empty-wall">${photos.length?"这个口味暂时卖完了":"货架还空着，来烤第一个面包吧"}</div>`;return}
+  w.innerHTML=visible.map((p,i)=>{const t=tagsOf(p);return `<button class="bread" data-i="${i}" style="--r:${tilt(p.id)}deg">
+    ${t[0]?`<span class="tag-card">${esc(t[0])}</span>`:""}
+    <img loading="lazy" alt="${esc(p.caption||"太后")}" src="${esc(imgUrl(p))}" ${p.w&&p.h?`width="${p.w}" height="${p.h}"`:""}>
+    ${p.caption?`<div class="cap">${esc(p.caption)}</div>`:""}
+    <div class="meta">${p.place?`<span>${esc(p.place)}</span>`:""}<span>烘焙师：${esc(p.by||"匿名面包师")}</span></div>
+  </button>`}).join("");
+}
+function fmtDate(ms){try{const d=new Date(ms);return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}`}catch(_){return ""}}
+function renderNotes(){
+  $("#notes").innerHTML=notes.length?notes.map((n,i)=>`<div class="receipt" style="--r:${tilt(n.id)*.5}deg">
+    <div class="hd">小可爱面包房<br>No.${String(notes.length-i).padStart(4,"0")}</div>
+    <p>${esc(n.text)}</p>
+    <div class="ft"><span>顾客：${esc(n.name||"路过的同学")}</span><span>${fmtDate(n.createdAt)}</span></div>
+  </div>`).join(""):'<p class="hint">柜台上还没有小票，第一张由你来打吧。</p>';
+}
+function renderAll(){renderHero();renderTally();renderChips();renderWall();renderNotes()}
+
+/* ——— 灯箱 ——— */
+function openLB(i,anim){
+  current=i;const p=visible[i];if(!p)return;const t=tagsOf(p);
+  const kv=[["地点",p.place],["时间",p.when],["烘焙师",p.by||"匿名面包师"]].filter(x=>x[1]);
+  $("#lbBody").innerHTML=`<div class="pic"><img class="${anim?"pop":""}" alt="${esc(p.caption||"太后")}" src="${esc(imgUrl(p))}"></div>
+   <div class="info">
+     ${anim?`<div class="hint">盲盒开出了——</div>`:""}
+     ${p.caption?`<div class="cap">${esc(p.caption)}</div>`:""}
+     <div class="kv">${kv.map(([k,v])=>`<b>${k}</b><span>${esc(v)}</span>`).join("")}</div>
+     ${t.length?`<div class="chips">${t.map(x=>`<span class="chip" style="cursor:default">${esc(x)}</span>`).join("")}</div>`:""}
+     ${p.story?`<div class="story">${esc(p.story)}</div>`:""}
+     <div class="nav">
+       <button class="btn" data-go="-1" ${visible.length<2?"disabled":""}>上一个</button>
+       <button class="btn" data-go="1" ${visible.length<2?"disabled":""}>下一个</button>
+       <button class="btn butter" data-go="r">再抽一个</button>
+     </div>
+   </div>`;
+  const d=$("#lightbox");if(!d.open)d.showModal();
+}
+function randomPick(){
+  if(!visible.length){toast("货架上还没有面包");return}
+  let i=Math.floor(Math.random()*visible.length);if(visible.length>1&&i===current)i=(i+1)%visible.length;
+  openLB(i,true);
+}
+$("#wall").addEventListener("click",e=>{const b=e.target.closest(".bread");if(b)openLB(+b.dataset.i)});
+$("#randomBtn").onclick=randomPick;
+$("#lbClose").onclick=()=>$("#lightbox").close();
+$("#lightbox").addEventListener("click",async e=>{
+  if(e.target===$("#lightbox"))return $("#lightbox").close();
+  const g=e.target.closest("[data-go]");
+  if(g){const v=g.dataset.go;if(v==="r")return randomPick();return openLB((current+ +v+visible.length)%visible.length)}
+});
+document.addEventListener("keydown",e=>{if(!$("#lightbox").open||!visible.length)return;if(e.key==="ArrowRight")openLB((current+1)%visible.length);if(e.key==="ArrowLeft")openLB((current-1+visible.length)%visible.length)});
+$("#chips").addEventListener("click",e=>{const c=e.target.closest(".chip");if(!c)return;filter=c.dataset.t;renderChips();renderWall()});
+
+/* ——— 送来新面包 ——— */
+let picked=[],pickedTags=new Set();
+$("#tagPick").innerHTML=TAGS.map(t=>`<button type="button" class="chip" data-t="${t}" aria-pressed="false">${t}</button>`).join("");
+$("#tagPick").addEventListener("click",e=>{const c=e.target.closest(".chip");if(!c)return;const t=c.dataset.t;pickedTags.has(t)?pickedTags.delete(t):pickedTags.add(t);c.setAttribute("aria-pressed",pickedTags.has(t))});
+function setFiles(list){
+  picked=[...list].filter(f=>f.type.startsWith("image/")||/\.(heic|heif)$/i.test(f.name)).slice(0,20);
+  $("#thumbs").innerHTML="";picked.forEach(f=>{const im=new Image();im.src=URL.createObjectURL(f);im.alt="";im.onerror=()=>{im.replaceWith(Object.assign(document.createElement("span"),{textContent:f.name,className:"hint"}))};$("#thumbs").appendChild(im)});
+  $("#upMsg").textContent=picked.length?`已选 ${picked.length} 张`:"";$("#upMsg").className="msg";
+}
+$("#upFiles").onchange=e=>setFiles(e.target.files);
+const drop=$("#drop");
+["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("over")}));
+["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("over")}));
+drop.addEventListener("drop",e=>setFiles(e.dataTransfer.files));
+$("#uploadBtn").onclick=()=>$("#upDialog").showModal();
+$("#upClose").onclick=()=>$("#upDialog").close();
+
+async function shrink(file){
+  const bmp=await createImageBitmap(file,{imageOrientation:"from-image"}).catch(()=>null);
+  if(!bmp)throw new Error("这张照片的格式浏览器读不了（常见于 iPhone 的 HEIC），请先转成 JPG 再传");
+  const s=Math.min(1,1600/Math.max(bmp.width,bmp.height));
+  const c=document.createElement("canvas");c.width=Math.round(bmp.width*s);c.height=Math.round(bmp.height*s);
+  c.getContext("2d").drawImage(bmp,0,0,c.width,c.height);
+  const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",.85));
+  return {blob,w:c.width,h:c.height};
+}
+$("#upForm").addEventListener("submit",async e=>{
+  e.preventDefault();const msg=$("#upMsg");
+  if(!sb){msg.className="msg err";msg.textContent="上传功能还没开通（网站还没连上数据库）。";return}
+  if(!picked.length){msg.className="msg err";msg.textContent="请先选至少一张照片。";return}
+  const btn=$("#upSubmit");btn.disabled=true;let ok=0,fails=[];
+  const meta={caption:$("#upCap").value.trim(),place:$("#upPlace").value.trim(),when:$("#upWhen").value.trim(),
+    story:$("#upStory").value.trim(),by:$("#upBy").value.trim(),tags:[...pickedTags]};
+  for(let i=0;i<picked.length;i++){
+    msg.className="msg";msg.textContent=`正在烤第 ${i+1} / ${picked.length} 个……`;
+    try{
+      const {blob,w,h}=await shrink(picked[i]);
+      const path=Date.now()+"-"+Math.random().toString(36).slice(2,8)+".jpg";
+      const up=await sb.storage.from("photos").upload(path,blob,{contentType:"image/jpeg"});
+      if(up.error)throw up.error;
+      const src=sb.storage.from("photos").getPublicUrl(path).data.publicUrl;
+      const ins=await sb.from("photos").insert({...meta,src,w,h});
+      if(ins.error)throw ins.error;
+      ok++;
+    }catch(err){fails.push(picked[i].name+"："+(err.message||err.code))}
+  }
+  btn.disabled=false;
+  if(fails.length){msg.className="msg err";msg.textContent=`出炉 ${ok} 个；没烤成的：${fails.join("；")}`}
+  else{$("#upDialog").close();toast(`叮！${ok} 个新面包出炉，已摆上货架`);loadPhotos();$("#upForm").reset();setFiles([]);pickedTags.clear();
+    document.querySelectorAll("#tagPick .chip").forEach(c=>c.setAttribute("aria-pressed","false"))}
+});
+
+/* ——— 小票 ——— */
+$("#noteForm").addEventListener("submit",async e=>{
+  e.preventDefault();const t=$("#noteText").value.trim();if(!t)return;const m=$("#noteMsg");
+  if(!sb){m.className="msg err";m.textContent="留言功能还没开通（网站还没连上数据库）。";return}
+  $("#noteBtn").disabled=true;
+  try{const r=await sb.from("notes").insert({name:$("#noteName").value.trim(),text:t});if(r.error)throw r.error;$("#noteText").value="";m.className="msg ok";m.textContent="小票已放上柜台。";loadNotes()}
+  catch(err){m.className="msg err";m.textContent="没打出来："+(err.message||err.code)}
+  $("#noteBtn").disabled=false;
+});
+
+/* ——— 开店 ——— */
+const norm=r=>({...r,createdAt:r.createdAt||(r.created_at?Date.parse(r.created_at):0)});
+async function loadPhotos(){
+  if(sb){const r=await sb.from("photos").select("*").order("created_at",{ascending:false}).limit(1000);
+    if(!r.error){photos=r.data.map(norm);renderAll();maybeAutoPlay(photos.length);return}
+    toast("货架加载出错，先展示店里的存货");}
+  try{const r=await fetch("photos.json");photos=(await r.json()).map(norm)}catch(_){photos=[]}
+  renderAll();maybeAutoPlay(photos.length);
+}
+async function loadNotes(){
+  if(!sb){notes=[];renderTally();renderNotes();return}
+  const r=await sb.from("notes").select("*").order("created_at",{ascending:false}).limit(300);
+  notes=r.error?[]:r.data.map(norm);renderTally();renderNotes();
+}
+(async()=>{
+  if(CFG.supabaseUrl&&CFG.supabaseAnonKey&&window.supabase&&!/YOUR-/.test(CFG.supabaseUrl)){
+    sb=window.supabase.createClient(CFG.supabaseUrl,CFG.supabaseAnonKey);
+  }else{
+    $("#upGate").textContent="上传功能还没开通：网站管理员需要先按 README 连接数据库。";$("#upSubmit").disabled=true;
+    $("#noteForm").hidden=true;$("#noteMsg").textContent="留言功能还没开通。";
+  }
+  await Promise.all([loadPhotos(),loadNotes()]);
+  if(sb){
+    sb.channel("live").on("postgres_changes",{event:"*",schema:"public",table:"photos"},()=>loadPhotos())
+      .on("postgres_changes",{event:"*",schema:"public",table:"notes"},()=>loadNotes()).subscribe();
+  }
+})();
+</script>
+</body>
+</html>
